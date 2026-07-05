@@ -141,14 +141,19 @@ export default function WatchFace({ state }: WatchFaceProps) {
                     return (
                       <div 
                         key={i} 
-                        className="absolute top-0 left-1/2 w-16 -ml-8 h-full flex justify-center pt-8 text-center font-serif text-3xl font-bold"
+                        className="absolute inset-0 flex justify-center"
                         style={{ 
                           transform: `rotate(${i * 30}deg)`,
-                          color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#2B2D42',
-                          opacity: 0.85
                         }}
                       >
-                        <div style={{ transform: `rotate(${-i * 30}deg)` }}>
+                        <div 
+                          className="pt-8 font-serif text-3xl font-bold flex items-center justify-center w-12 h-12"
+                          style={{ 
+                            transform: `rotate(${-i * 30}deg)`,
+                            color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#2B2D42',
+                            opacity: 0.85
+                          }}
+                        >
                           {num}
                         </div>
                       </div>
@@ -317,7 +322,7 @@ export default function WatchFace({ state }: WatchFaceProps) {
             )}
 
             {/* Complication (Date) - Render only for styles that need it */}
-            {(state.style === 'Analog' || state.style === 'Orbit') && (
+            {state.style === 'Orbit' && (
               <div className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md px-2 py-1 rounded shadow-inner border border-black/5 text-xs font-bold font-mono tracking-widest"
                    style={{ color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#fff' : '#111' }}>
                 {time.getDate()}
