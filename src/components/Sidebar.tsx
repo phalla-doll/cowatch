@@ -22,8 +22,8 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
       
       {/* Top Nav */}
       <div className="flex items-center gap-3 mb-10">
-        <div className={`flex relative ${pillBg} p-1 rounded-full`}>
-          <button className="relative px-4 py-2 rounded-full text-sm font-semibold text-black transition-all z-10">
+        <div className={`flex flex-1 relative ${pillBg} p-1 rounded-full`}>
+          <button className="flex-1 relative px-4 py-2 rounded-full text-sm font-semibold text-black transition-all z-10">
             <motion.div 
               layoutId="nav-pill"
               className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
@@ -31,11 +31,11 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
             />
             Watch
           </button>
-          <button className="relative px-4 py-2 rounded-full text-sm font-semibold text-gray-400 hover:text-gray-600 transition-all z-10">
+          <button className="flex-1 relative px-4 py-2 rounded-full text-sm font-semibold text-gray-400 hover:text-gray-600 transition-all z-10">
             Timer
           </button>
         </div>
-        <button className="w-10 h-10 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] flex items-center justify-center text-black transition-colors">
+        <button className="w-10 h-10 shrink-0 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] flex items-center justify-center text-black transition-colors">
           <Palette size={18} fill="currentColor" />
         </button>
       </div>
@@ -48,12 +48,12 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
           
           <div className="space-y-5">
             {/* Styles */}
-            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-full`}>
               {styles.map(s => (
                 <button
                   key={s}
                   onClick={() => updateState({ style: s })}
-                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
+                  className={`flex-1 relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.style === s 
                       ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
@@ -72,12 +72,12 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
             </div>
 
             {/* Movements */}
-            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-full`}>
               {movements.map(m => (
                 <button
                   key={m}
                   onClick={() => updateState({ movement: m })}
-                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
+                  className={`flex-1 relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.movement === m 
                       ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
@@ -123,12 +123,12 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
           
           <div className="space-y-5">
             {/* Sounds */}
-            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-full`}>
               {sounds.map(s => (
                 <button
                   key={s}
                   onClick={() => updateState({ sound: s })}
-                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
+                  className={`flex-1 relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.sound === s 
                       ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
