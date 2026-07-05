@@ -31,6 +31,28 @@ export default function WatchFace({ state }: WatchFaceProps) {
     const t = ctx.currentTime;
     const vol = state.volume / 100;
 
+    if (state.sound === 'System') {
+      // System: crisp digital UI tick
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      // Pitch drop creates a distinct "tock" UI sound
+      osc.frequency.setValueAtTime(1000, t);
+      osc.frequency.exponentialRampToValueAtTime(400, t + 0.03);
+      
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(vol * 0.5, t + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.start(t);
+      osc.stop(t + 0.04);
+      return;
+    }
+
     // Create a short noise burst for the "click" mechanism
     const bufferSize = ctx.sampleRate * 0.05; 
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
