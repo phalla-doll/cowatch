@@ -243,28 +243,17 @@ export default function WatchFace({ state }: WatchFaceProps) {
                     <div className="absolute inset-x-[1px] top-[1px] bottom-6 bg-white/20 rounded-full"></div>
                   </div>
 
-                  {/* Second Hand / Dot based on Movement */}
-                  {state.movement === 'Dots' ? (
-                    <div 
-                      className="absolute w-[8px] h-[8px] bg-[#E63946] rounded-full shadow-[0_0_10px_rgba(230,57,70,0.6)] transition-transform duration-75"
-                      style={{ 
-                        transform: `rotate(${secondsDegrees}deg) translateY(-180px)`,
-                        transformOrigin: '0 180px',
-                        transitionTimingFunction: 'cubic-bezier(0.4, 2.08, 0.55, 0.44)'
-                      }}
-                    />
-                  ) : (
-                    <div 
-                      className="absolute w-[2px] h-[45%] bg-[#E63946] bottom-1/2 origin-bottom shadow-[1px_2px_4px_rgba(230,57,70,0.4)] transition-transform duration-75"
-                      style={{ 
-                        transform: `rotate(${secondsDegrees}deg)`,
-                        transitionTimingFunction: state.movement === 'Mechanical' ? 'linear' : 'cubic-bezier(0.4, 2.08, 0.55, 0.44)'
-                      }}
-                    >
-                      {/* Counter weight */}
-                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-1.5 h-8 bg-[#E63946] rounded-full"></div>
-                    </div>
-                  )}
+                  {/* Second Hand */}
+                  <div 
+                    className="absolute w-[2px] h-[45%] bg-[#E63946] bottom-1/2 origin-bottom shadow-[1px_2px_4px_rgba(230,57,70,0.4)] transition-transform duration-75"
+                    style={{ 
+                      transform: `rotate(${secondsDegrees}deg)`,
+                      transitionTimingFunction: state.movement === 'Mechanical' ? 'linear' : 'cubic-bezier(0.4, 2.08, 0.55, 0.44)'
+                    }}
+                  >
+                    {/* Counter weight */}
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-1.5 h-8 bg-[#E63946] rounded-full"></div>
+                  </div>
                   
                   {/* Center Pin */}
                   <div className="absolute w-4 h-4 bg-[#E63946] rounded-full z-20 shadow-[0_2px_4px_rgba(0,0,0,0.3)] border-2 border-[#111]"></div>

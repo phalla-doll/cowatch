@@ -1,5 +1,5 @@
 export type WatchStyle = 'Radio' | 'Orbit' | 'Analog';
-export type Movement = 'Quartz' | 'Mechanical' | 'Dots';
+export type Movement = 'Quartz' | 'Mechanical';
 export type SoundSystem = 'Mute' | 'System' | 'Watch';
 
 export interface AppState {
