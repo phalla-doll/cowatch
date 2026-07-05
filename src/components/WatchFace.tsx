@@ -135,22 +135,22 @@ export default function WatchFace({ state }: WatchFaceProps) {
             {state.style === 'Analog' && (
               <>
                 {/* Number Marks */}
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 z-0">
                   {[...Array(12)].map((_, i) => {
                     const num = i === 0 ? 12 : i;
                     return (
                       <div 
                         key={i} 
-                        className="absolute inset-6 flex justify-center text-center font-serif text-2xl font-bold"
+                        className="absolute top-0 left-1/2 w-16 -ml-8 h-full flex justify-center pt-8 text-center font-serif text-3xl font-bold"
                         style={{ 
                           transform: `rotate(${i * 30}deg)`,
                           color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#2B2D42',
-                          opacity: 0.8
+                          opacity: 0.85
                         }}
                       >
-                        <span style={{ transform: `rotate(${-i * 30}deg)` }}>
+                        <div style={{ transform: `rotate(${-i * 30}deg)` }}>
                           {num}
-                        </span>
+                        </div>
                       </div>
                     );
                   })}
