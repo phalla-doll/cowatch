@@ -145,9 +145,6 @@ export default function WatchFace({ state }: WatchFaceProps) {
                     const x = Math.cos(angle) * radius;
                     const y = Math.sin(angle) * radius;
                     
-                    // Do not render '3' if date complication overlaps
-                    if (num === 3) return null;
-
                     return (
                       <div 
                         key={i} 
@@ -302,15 +299,7 @@ export default function WatchFace({ state }: WatchFaceProps) {
               </div>
             )})()}
 
-            {/* Complication (Date) - Render only for styles that need it */}
-            {(state.style === 'Analog' || state.style === 'Orbit') && (() => {
-              const isDark = state.color === '#111111' || state.color === '#5B86E5';
-              return (
-              <div className="absolute right-12 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md px-2 py-1 rounded shadow-inner border border-black/5 text-sm font-bold font-mono tracking-widest z-10"
-                   style={{ color: isDark ? '#fff' : '#111' }}>
-                {time.getDate()}
-              </div>
-            )})()}
+
 
           </div>
         </div>
