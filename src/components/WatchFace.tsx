@@ -147,7 +147,7 @@ export default function WatchFace({ state }: WatchFaceProps) {
                         }}
                       >
                         <div 
-                          className="pt-8 font-serif text-3xl font-bold flex items-center justify-center w-12 h-12"
+                          className="pt-8 font-rounded text-3xl font-bold flex items-center justify-center w-12 h-12"
                           style={{ 
                             transform: `rotate(${-i * 30}deg)`,
                             color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#2B2D42',
