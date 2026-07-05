@@ -321,31 +321,93 @@ export default function WatchFace({ state }: WatchFaceProps) {
               const isDark = state.color === '#111111' || state.color === '#5B86E5';
               return (
               <div className="relative w-full h-full flex items-center justify-center">
-                {/* Center Sun/Core */}
-                <div className="absolute w-12 h-12 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.2)] z-10" style={{ backgroundColor: isDark ? '#fff' : '#111' }}></div>
                 
-                {/* Orbit Rings */}
-                <div className="absolute w-[160px] h-[160px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
-                <div className="absolute w-[260px] h-[260px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
-                <div className="absolute w-[360px] h-[360px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
+                {/* Orbit Rings & Markers (SVG for precision) */}
+                <svg className="absolute w-full h-full pointer-events-none" viewBox="0 0 400 400">
+                  {/* Outer Hour Markers */}
+                  {Array.from({ length: 12 }).map((_, i) => {
+                    const angle = (i * 30 - 90) * (Math.PI / 180);
+                    const x = 200 + Math.cos(angle) * 180;
+                    const y = 200 + Math.sin(angle) * 180;
+                    return (
+                      <circle key={`m${i}`} cx={x} cy={y} r="2.5" fill={isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} />
+                    );
+                  })}
+                  {/* Subtle Sub-Markers */}
+                  {Array.from({ length: 60 }).map((_, i) => {
+                    if (i % 5 === 0) return null; // Skip where hour markers are
+                    const angle = (i * 6 - 90) * (Math.PI / 180);
+                    const x = 200 + Math.cos(angle) * 180;
+                    const y = 200 + Math.sin(angle) * 180;
+                    return (
+                      <circle key={`sm${i}`} cx={x} cy={y} r="1" fill={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} />
+                    );
+                  })}
+                  
+                  {/* Orbit Paths */}
+                  <circle cx="200" cy="200" r="40" fill="none" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'} strokeWidth="1" strokeDasharray="3 4" />
+                  <circle cx="200" cy="200" r="95" fill="none" stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'} strokeWidth="1" />
+                  <circle cx="200" cy="200" r="150" fill="none" stroke={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)'} strokeWidth="1" />
+                </svg>
 
+                {/* Center Sun/Core */}
+                <div 
+                  className="absolute w-12 h-12 rounded-full z-10 flex items-center justify-center transition-colors" 
+                  style={{ 
+                    background: isDark ? 'radial-gradient(circle at 30% 30%, #ffffff, #9ca3af)' : 'radial-gradient(circle at 30% 30%, #374151, #000000)',
+                    boxShadow: isDark 
+                      ? '0 0 30px rgba(255,255,255,0.2), inset -3px -3px 8px rgba(0,0,0,0.3)' 
+                      : '0 0 30px rgba(0,0,0,0.15), inset -3px -3px 8px rgba(255,255,255,0.2)'
+                  }}
+                >
+                  <div className="w-full h-full rounded-full border border-white/20 mix-blend-overlay"></div>
+                </div>
+                
                 {/* Hours Planet */}
                 <div className="absolute w-full h-full flex justify-center" style={{ transform: `rotate(${hoursDegrees}deg)` }}>
-                  <div className="mt-[54px] w-8 h-8 rounded-full shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.3)] bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-[10px] font-bold text-white font-mono" style={{ transform: `rotate(${-hoursDegrees}deg)` }}>
+                  <div 
+                    className="mt-[34px] w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white font-mono relative z-20" 
+                    style={{ 
+                      transform: `rotate(${-hoursDegrees}deg)`,
+                      background: 'radial-gradient(circle at 30% 30%, #9ca3af, #4b5563)',
+                      boxShadow: '0 6px 12px rgba(0,0,0,0.3), inset -2px -2px 6px rgba(0,0,0,0.5), inset 2px 2px 6px rgba(255,255,255,0.4)'
+                    }}
+                  >
+                    <div className="absolute -inset-1 bg-gray-400/20 rounded-full blur-[4px] -z-10"></div>
                     {hours}
                   </div>
                 </div>
 
                 {/* Minutes Planet */}
                 <div className="absolute w-full h-full flex justify-center" style={{ transform: `rotate(${minutesDegrees}deg)` }}>
-                  <div className="mt-[106px] w-6 h-6 rounded-full shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.3)] bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-[8px] font-bold text-white font-mono" style={{ transform: `rotate(${-minutesDegrees}deg)` }}>
+                  <div 
+                    className="mt-[93px] w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white font-mono relative z-20" 
+                    style={{ 
+                      transform: `rotate(${-minutesDegrees}deg)`,
+                      background: 'radial-gradient(circle at 30% 30%, #60a5fa, #1d4ed8)',
+                      boxShadow: '0 4px 10px rgba(0,0,0,0.3), inset -2px -2px 6px rgba(0,0,0,0.5), inset 2px 2px 4px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <div className="absolute -inset-1 bg-blue-400/30 rounded-full blur-[4px] -z-10"></div>
                     {minutes}
                   </div>
                 </div>
 
                 {/* Seconds Moon */}
-                <div className="absolute w-full h-full flex justify-center transition-transform duration-75" style={{ transform: `rotate(${secondsDegrees}deg)`, transitionTimingFunction: state.movement === 'Mechanical' ? 'linear' : 'cubic-bezier(0.4, 2.08, 0.55, 0.44)' }}>
-                  <div className="mt-[166px] w-4 h-4 rounded-full shadow-[0_0_8px_rgba(230,57,70,0.5)] bg-[#E63946]"></div>
+                <div 
+                  className="absolute w-full h-full flex justify-center transition-transform duration-75" 
+                  style={{ 
+                    transform: `rotate(${secondsDegrees}deg)`, 
+                    transitionTimingFunction: state.movement === 'Mechanical' ? 'linear' : 'cubic-bezier(0.4, 2.08, 0.55, 0.44)' 
+                  }}
+                >
+                  <div 
+                    className="mt-[156px] w-2.5 h-2.5 rounded-full relative z-20"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #f87171, #b91c1c)',
+                      boxShadow: '0 2px 6px rgba(230,57,70,0.6), inset -1px -1px 3px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.4)'
+                    }}
+                  ></div>
                 </div>
               </div>
             )})()}
