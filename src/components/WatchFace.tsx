@@ -27,31 +27,71 @@ export default function WatchFace({ state }: WatchFaceProps) {
     if (ctx.state === 'suspended') {
       ctx.resume();
     }
+    
+    const t = ctx.currentTime;
+    const vol = state.volume / 100;
 
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    // Different tick sound for Mechanical vs Quartz
-    if (state.movement === 'Mechanical') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.05);
-      gainNode.gain.setValueAtTime((state.volume / 100) * 0.05, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.05);
-    } else {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(1200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.1);
-      gainNode.gain.setValueAtTime((state.volume / 100) * 0.1, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.1);
+    // Create a short noise burst for the "click" mechanism
+    const bufferSize = ctx.sampleRate * 0.05; 
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
     }
-    
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    const noiseGain = ctx.createGain();
+
+    if (state.movement === 'Mechanical') {
+      // Mechanical: softer, more frequent ticking (escapement sound)
+      noiseFilter.frequency.value = 5000;
+      noiseFilter.Q.value = 2;
+      
+      noiseGain.gain.setValueAtTime(0, t);
+      noiseGain.gain.linearRampToValueAtTime(vol * 0.3, t + 0.001);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.015);
+      
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      
+      noise.start(t);
+      noise.stop(t + 0.02);
+    } else {
+      // Quartz: sharp, distinct single tick (stepper motor sound)
+      noiseFilter.frequency.value = 6000;
+      noiseFilter.Q.value = 1;
+      
+      noiseGain.gain.setValueAtTime(0, t);
+      noiseGain.gain.linearRampToValueAtTime(vol * 0.6, t + 0.001);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.02);
+      
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(2500, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.02);
+      
+      oscGain.gain.setValueAtTime(0, t);
+      oscGain.gain.linearRampToValueAtTime(vol * 0.3, t + 0.001);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.02);
+      
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      
+      osc.start(t);
+      osc.stop(t + 0.03);
+      noise.start(t);
+      noise.stop(t + 0.03);
+    }
   };
 
   useEffect(() => {
@@ -63,8 +103,8 @@ export default function WatchFace({ state }: WatchFaceProps) {
         const now = new Date();
         setTime(now);
         
-        // Mechanical ticks very fast, maybe 4 times a second (4Hz)
-        const currentTick = Math.floor(now.getTime() / 250);
+        // Mechanical ticks very fast, 8 times a second
+        const currentTick = Math.floor(now.getTime() / 125);
         if (currentTick !== lastTickSecondRef.current) {
           lastTickSecondRef.current = currentTick;
           playTick();
