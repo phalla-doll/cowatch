@@ -120,7 +120,7 @@ export default function WatchFace({ state }: WatchFaceProps) {
       </div>
 
       {/* The Watch */}
-      <div className="relative w-[500px] h-[500px] rounded-full bg-[#F4F5F7] shadow-[20px_20px_60px_#c8c9cc,-20px_-20px_60px_#ffffff] flex items-center justify-center">
+      <div className="relative w-[500px] h-[500px] scale-[1.35] 2xl:scale-[1.5] rounded-full bg-[#F4F5F7] shadow-[20px_20px_60px_#c8c9cc,-20px_-20px_60px_#ffffff] flex items-center justify-center transition-transform duration-500">
         
         {/* Inner bezel / depth */}
         <div className="absolute inset-4 rounded-full bg-white shadow-[inset_4px_4px_10px_rgba(0,0,0,0.05),inset_-4px_-4px_10px_rgba(255,255,255,0.8)] border border-gray-100 flex items-center justify-center overflow-hidden">
