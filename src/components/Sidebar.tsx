@@ -15,6 +15,7 @@ const sounds: SoundSystem[] = ['Mute', 'System', 'Watch'];
 export default function Sidebar({ state, updateState }: SidebarProps) {
   // We use slightly lighter gray for the container backgrounds to match the image
   const pillBg = "bg-[#E3E5E9]";
+  const pillTransition = { type: "spring", bounce: 0, duration: 0.3 };
 
   return (
     <aside className="w-[300px] bg-[#EEEEF0] h-full flex flex-col px-6 py-8 z-10 overflow-y-auto">
@@ -26,7 +27,7 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
             <motion.div 
               layoutId="nav-pill"
               className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              transition={pillTransition}
             />
             Watch
           </button>
@@ -62,7 +63,7 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                     <motion.div 
                       layoutId="style-pill"
                       className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      transition={pillTransition}
                     />
                   )}
                   {s}
@@ -86,7 +87,7 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                     <motion.div 
                       layoutId="movement-pill"
                       className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      transition={pillTransition}
                     />
                   )}
                   {m}
@@ -137,7 +138,7 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                     <motion.div 
                       layoutId="sound-pill"
                       className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      transition={pillTransition}
                     />
                   )}
                   {s}
@@ -159,6 +160,7 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                   layout
                   className="absolute h-full bg-white rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex items-center justify-end px-3 min-w-[2.5rem]"
                   style={{ width: `${Math.max(15, state.volume)}%` }} // keep a min width so text is readable
+                  transition={pillTransition}
                 >
                   <span className="font-bold text-black text-xs">{state.volume}%</span>
                 </motion.div>
