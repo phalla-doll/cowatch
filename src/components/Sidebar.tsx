@@ -1,4 +1,5 @@
 import { Palette } from 'lucide-react';
+import { motion } from 'motion/react';
 import { AppState, WatchStyle, Movement, SoundSystem } from '../types';
 
 interface SidebarProps {
@@ -20,9 +21,18 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
       
       {/* Top Nav */}
       <div className="flex items-center gap-3 mb-10">
-        <div className={`flex ${pillBg} p-1 rounded-full`}>
-          <button className="px-4 py-2 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] text-sm font-semibold text-black transition-all">Watch</button>
-          <button className="px-4 py-2 rounded-full text-sm font-semibold text-gray-400 hover:text-gray-600 transition-all">Timer</button>
+        <div className={`flex relative ${pillBg} p-1 rounded-full`}>
+          <button className="relative px-4 py-2 rounded-full text-sm font-semibold text-black transition-all z-10">
+            <motion.div 
+              layoutId="nav-pill"
+              className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+            Watch
+          </button>
+          <button className="relative px-4 py-2 rounded-full text-sm font-semibold text-gray-400 hover:text-gray-600 transition-all z-10">
+            Timer
+          </button>
         </div>
         <button className="w-10 h-10 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] flex items-center justify-center text-black transition-colors">
           <Palette size={18} fill="currentColor" />
@@ -37,34 +47,48 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
           
           <div className="space-y-5">
             {/* Styles */}
-            <div className={`flex ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
               {styles.map(s => (
                 <button
                   key={s}
                   onClick={() => updateState({ style: s })}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.style === s 
-                      ? 'bg-white text-black shadow-[0_2px_8px_rgba(0,0,0,0.06)]' 
+                      ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
+                  {state.style === s && (
+                    <motion.div 
+                      layoutId="style-pill"
+                      className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                   {s}
                 </button>
               ))}
             </div>
 
             {/* Movements */}
-            <div className={`flex ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
               {movements.map(m => (
                 <button
                   key={m}
                   onClick={() => updateState({ movement: m })}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.movement === m 
-                      ? 'bg-white text-black shadow-[0_2px_8px_rgba(0,0,0,0.06)]' 
+                      ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
+                  {state.movement === m && (
+                    <motion.div 
+                      layoutId="movement-pill"
+                      className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                   {m}
                 </button>
               ))}
@@ -98,17 +122,24 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
           
           <div className="space-y-5">
             {/* Sounds */}
-            <div className={`flex ${pillBg} p-1 rounded-full w-max`}>
+            <div className={`flex relative ${pillBg} p-1 rounded-full w-max`}>
               {sounds.map(s => (
                 <button
                   key={s}
                   onClick={() => updateState({ sound: s })}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-all z-10 ${
                     state.sound === s 
-                      ? 'bg-white text-black shadow-[0_2px_8px_rgba(0,0,0,0.06)]' 
+                      ? 'text-black' 
                       : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
+                  {state.sound === s && (
+                    <motion.div 
+                      layoutId="sound-pill"
+                      className="absolute inset-0 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                   {s}
                 </button>
               ))}
@@ -124,12 +155,13 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                   onChange={(e) => updateState({ volume: parseInt(e.target.value) })}
                   className="absolute w-full h-full opacity-0 cursor-pointer z-10"
                 />
-                <div 
-                  className="absolute h-full bg-white rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all flex items-center justify-end px-3 min-w-[2.5rem]"
+                <motion.div 
+                  layout
+                  className="absolute h-full bg-white rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex items-center justify-end px-3 min-w-[2.5rem]"
                   style={{ width: `${Math.max(15, state.volume)}%` }} // keep a min width so text is readable
                 >
                   <span className="font-bold text-black text-xs">{state.volume}%</span>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
