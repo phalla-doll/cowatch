@@ -236,39 +236,6 @@ export default function WatchFace({ state }: WatchFaceProps) {
               </>
             )}
 
-            {/* Style: Digital */}
-            {state.style === 'Digital' && (() => {
-              const isDark = state.color === '#111111' || state.color === '#5B86E5';
-              return (
-              <div 
-                className="flex flex-col items-center justify-center font-mono"
-                style={{ color: isDark ? '#F4F5F7' : '#111' }}
-              >
-                <div className="text-8xl font-bold tracking-tighter tabular-nums flex items-baseline">
-                  {hours.toString().padStart(2, '0')}
-                  <span className={`${state.movement === 'Quartz' && seconds % 2 === 0 ? 'opacity-20' : 'opacity-100'} transition-opacity mx-2`}>:</span>
-                  {minutes.toString().padStart(2, '0')}
-                </div>
-                <div className="text-3xl font-medium tracking-widest mt-2 flex items-center gap-4">
-                  <span>{time.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}</span>
-                  <span className="text-[#E63946]">{seconds.toString().padStart(2, '0')}</span>
-                  <span>{time.getDate()}</span>
-                </div>
-                
-                {/* Movement Dots representation for Digital */}
-                {state.movement === 'Dots' && (
-                  <div className="mt-8 flex gap-2">
-                    {[...Array(10)].map((_, i) => (
-                      <div 
-                        key={i} 
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${i < (seconds % 10) + 1 ? 'bg-[#E63946] scale-110 shadow-[0_0_8px_rgba(230,57,70,0.5)]' : (isDark ? 'bg-white/10' : 'bg-black/10')}`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )})()}
-
             {/* Style: Radio */}
             {state.style === 'Radio' && (() => {
               const isDark = state.color === '#111111' || state.color === '#5B86E5';

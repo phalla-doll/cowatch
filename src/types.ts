@@ -1,4 +1,4 @@
-export type WatchStyle = 'Digital' | 'Radio' | 'Orbit' | 'Analog';
+export type WatchStyle = 'Radio' | 'Orbit' | 'Analog';
 export type Movement = 'Quartz' | 'Mechanical' | 'Dots';
 export type SoundSystem = 'Mute' | 'System' | 'Watch';
 

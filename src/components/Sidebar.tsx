@@ -6,7 +6,7 @@ interface SidebarProps {
   updateState: (updates: Partial<AppState>) => void;
 }
 
-const styles: WatchStyle[] = ['Digital', 'Radio', 'Orbit', 'Analog'];
+const styles: WatchStyle[] = ['Radio', 'Orbit', 'Analog'];
 const movements: Movement[] = ['Quartz', 'Mechanical', 'Dots'];
 const colors = ['#D3E4C5', '#FDF094', '#E8EAEE', '#111111', '#5B86E5'];
 const sounds: SoundSystem[] = ['Mute', 'System', 'Watch'];
