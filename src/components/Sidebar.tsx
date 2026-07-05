@@ -157,12 +157,11 @@ export default function Sidebar({ state, updateState }: SidebarProps) {
                   className="absolute w-full h-full opacity-0 cursor-pointer z-10"
                 />
                 <motion.div 
-                  layout
-                  className="absolute h-full bg-white rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex items-center justify-end px-3 min-w-[2.5rem]"
-                  style={{ width: `${Math.max(15, state.volume)}%` }} // keep a min width so text is readable
-                  transition={pillTransition}
+                  className="absolute h-full bg-white rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex items-center justify-end px-3 min-w-[2.5rem] overflow-hidden"
+                  animate={{ width: `${Math.max(15, state.volume)}%` }} // keep a min width so text is readable
+                  transition={{ type: "spring", bounce: 0, duration: 0.2 }}
                 >
-                  <span className="font-bold text-black text-xs">{state.volume}%</span>
+                  <span className="font-bold text-black text-xs whitespace-nowrap">{state.volume}%</span>
                 </motion.div>
               </div>
             </div>
