@@ -129,7 +129,7 @@ export default function WatchFace({ state }: WatchFaceProps) {
           <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/40 to-transparent rotate-[-15deg] origin-bottom-left rounded-tl-full pointer-events-none z-20"></div>
 
           {/* Dial Face */}
-          <div className="relative w-full h-full flex items-center justify-center transition-colors duration-500" style={{ backgroundColor: state.color === '#F8F9FA' ? '#ffffff' : state.color }}>
+          <div className="relative w-full h-full flex items-center justify-center transition-colors duration-500" style={{ backgroundColor: state.color === '#F8F9FA' || state.color === '#E8EAEE' ? '#ffffff' : state.color }}>
             
             {/* Style: Analog */}
             {state.style === 'Analog' && (
@@ -138,43 +138,51 @@ export default function WatchFace({ state }: WatchFaceProps) {
                 <div className="absolute inset-0 z-0">
                   {[...Array(12)].map((_, i) => {
                     const num = i === 0 ? 12 : i;
+                    const isDark = state.color === '#111111' || state.color === '#5B86E5';
+                    // 12 is at top (rotate -90deg)
+                    const angle = (i * 30 - 90) * (Math.PI / 180);
+                    const radius = 175; // Adjust distance from center
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    
+                    // Do not render '3' if date complication overlaps
+                    if (num === 3) return null;
+
                     return (
                       <div 
                         key={i} 
-                        className="absolute inset-0 flex justify-center"
+                        className="absolute w-12 h-12 flex items-center justify-center font-rounded text-3xl font-bold"
                         style={{ 
-                          transform: `rotate(${i * 30}deg)`,
+                          left: `calc(50% + ${x}px)`,
+                          top: `calc(50% + ${y}px)`,
+                          transform: 'translate(-50%, -50%)',
+                          color: isDark ? '#F4F5F7' : '#2B2D42',
+                          opacity: 0.85
                         }}
                       >
-                        <div 
-                          className="pt-8 font-rounded text-3xl font-bold flex items-center justify-center w-12 h-12"
-                          style={{ 
-                            transform: `rotate(${-i * 30}deg)`,
-                            color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#2B2D42',
-                            opacity: 0.85
-                          }}
-                        >
-                          {num}
-                        </div>
+                        {num}
                       </div>
                     );
                   })}
                 </div>
 
                 {/* Minute Ticks */}
-                <div className="absolute inset-0">
-                  {[...Array(60)].map((_, i) => (
-                    <div
-                      key={`tick-${i}`}
-                      className="absolute top-0 left-1/2 -translate-x-1/2 h-full flex pt-3"
-                      style={{ transform: `rotate(${i * 6}deg)` }}
-                    >
-                      <div 
-                        className={`w-[2px] rounded-full ${i % 5 === 0 ? 'h-3' : 'h-1.5'}`} 
-                        style={{ backgroundColor: state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.2)' }}
-                      />
-                    </div>
-                  ))}
+                <div className="absolute inset-0 z-0">
+                  {[...Array(60)].map((_, i) => {
+                    const isDark = state.color === '#111111' || state.color === '#5B86E5';
+                    return (
+                      <div
+                        key={`tick-${i}`}
+                        className="absolute top-0 left-1/2 -translate-x-1/2 h-full flex pt-3"
+                        style={{ transform: `rotate(${i * 6}deg)` }}
+                      >
+                        <div 
+                          className={`w-[2px] rounded-full ${i % 5 === 0 ? 'h-3' : 'h-1.5'}`} 
+                          style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.2)' }}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Hands */}
@@ -229,10 +237,12 @@ export default function WatchFace({ state }: WatchFaceProps) {
             )}
 
             {/* Style: Digital */}
-            {state.style === 'Digital' && (
+            {state.style === 'Digital' && (() => {
+              const isDark = state.color === '#111111' || state.color === '#5B86E5';
+              return (
               <div 
                 className="flex flex-col items-center justify-center font-mono"
-                style={{ color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#F4F5F7' : '#111' }}
+                style={{ color: isDark ? '#F4F5F7' : '#111' }}
               >
                 <div className="text-8xl font-bold tracking-tighter tabular-nums flex items-baseline">
                   {hours.toString().padStart(2, '0')}
@@ -251,54 +261,58 @@ export default function WatchFace({ state }: WatchFaceProps) {
                     {[...Array(10)].map((_, i) => (
                       <div 
                         key={i} 
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${i < (seconds % 10) + 1 ? 'bg-[#E63946] scale-110 shadow-[0_0_8px_rgba(230,57,70,0.5)]' : 'bg-black/10'}`}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${i < (seconds % 10) + 1 ? 'bg-[#E63946] scale-110 shadow-[0_0_8px_rgba(230,57,70,0.5)]' : (isDark ? 'bg-white/10' : 'bg-black/10')}`}
                       />
                     ))}
                   </div>
                 )}
               </div>
-            )}
+            )})()}
 
             {/* Style: Radio */}
-            {state.style === 'Radio' && (
+            {state.style === 'Radio' && (() => {
+              const isDark = state.color === '#111111' || state.color === '#5B86E5';
+              return (
               <div className="relative w-[360px] h-[360px] flex items-center justify-center">
                 {/* Hours Ring */}
                 <svg className="absolute w-full h-full -rotate-90">
-                  <circle cx="180" cy="180" r="160" fill="none" stroke={state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="12" />
-                  <circle cx="180" cy="180" r="160" fill="none" stroke={state.color === '#2B2D42' || state.color === '#3D5A80' ? '#fff' : '#111'} strokeWidth="12" 
+                  <circle cx="180" cy="180" r="160" fill="none" stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="12" />
+                  <circle cx="180" cy="180" r="160" fill="none" stroke={isDark ? '#fff' : '#111'} strokeWidth="12" 
                           strokeDasharray="1005" strokeDashoffset={1005 - (1005 * (hoursDegrees / 360))} className="transition-all duration-1000 ease-out" />
                 </svg>
                 {/* Minutes Ring */}
                 <svg className="absolute w-[280px] h-[280px] -rotate-90">
-                  <circle cx="140" cy="140" r="120" fill="none" stroke={state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="12" />
-                  <circle cx="140" cy="140" r="120" fill="none" stroke={state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.8)' : '#444'} strokeWidth="12" 
+                  <circle cx="140" cy="140" r="120" fill="none" stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="12" />
+                  <circle cx="140" cy="140" r="120" fill="none" stroke={isDark ? 'rgba(255,255,255,0.8)' : '#444'} strokeWidth="12" 
                           strokeDasharray="754" strokeDashoffset={754 - (754 * (minutesDegrees / 360))} className="transition-all duration-1000 ease-out" />
                 </svg>
                 {/* Seconds Ring */}
                 <svg className="absolute w-[200px] h-[200px] -rotate-90">
-                  <circle cx="100" cy="100" r="80" fill="none" stroke={state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="8" />
+                  <circle cx="100" cy="100" r="80" fill="none" stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'} strokeWidth="8" />
                   <circle cx="100" cy="100" r="80" fill="none" stroke="#E63946" strokeWidth="8" 
                           strokeDasharray="502" strokeDashoffset={502 - (502 * (secondsDegrees / 360))} 
                           className="transition-all duration-75"
                           style={{ transitionTimingFunction: state.movement === 'Mechanical' ? 'linear' : 'cubic-bezier(0.4, 2.08, 0.55, 0.44)' }} />
                 </svg>
                 
-                <div className="absolute font-mono text-2xl font-bold" style={{ color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#fff' : '#111' }}>
+                <div className="absolute font-mono text-2xl font-bold" style={{ color: isDark ? '#fff' : '#111' }}>
                   {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
                 </div>
               </div>
-            )}
+            )})()}
 
             {/* Style: Orbit */}
-            {state.style === 'Orbit' && (
+            {state.style === 'Orbit' && (() => {
+              const isDark = state.color === '#111111' || state.color === '#5B86E5';
+              return (
               <div className="relative w-full h-full flex items-center justify-center">
                 {/* Center Sun/Core */}
-                <div className="absolute w-12 h-12 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.2)] z-10" style={{ backgroundColor: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#fff' : '#111' }}></div>
+                <div className="absolute w-12 h-12 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.2)] z-10" style={{ backgroundColor: isDark ? '#fff' : '#111' }}></div>
                 
                 {/* Orbit Rings */}
-                <div className="absolute w-[160px] h-[160px] rounded-full border border-black/5" style={{ borderColor: state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
-                <div className="absolute w-[260px] h-[260px] rounded-full border border-black/5" style={{ borderColor: state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
-                <div className="absolute w-[360px] h-[360px] rounded-full border border-black/5" style={{ borderColor: state.color === '#2B2D42' || state.color === '#3D5A80' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
+                <div className="absolute w-[160px] h-[160px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
+                <div className="absolute w-[260px] h-[260px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
+                <div className="absolute w-[360px] h-[360px] rounded-full border border-black/5" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}></div>
 
                 {/* Hours Planet */}
                 <div className="absolute w-full h-full flex justify-center" style={{ transform: `rotate(${hoursDegrees}deg)` }}>
@@ -319,15 +333,17 @@ export default function WatchFace({ state }: WatchFaceProps) {
                   <div className="mt-[166px] w-4 h-4 rounded-full shadow-[0_0_8px_rgba(230,57,70,0.5)] bg-[#E63946]"></div>
                 </div>
               </div>
-            )}
+            )})()}
 
             {/* Complication (Date) - Render only for styles that need it */}
-            {state.style === 'Orbit' && (
-              <div className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md px-2 py-1 rounded shadow-inner border border-black/5 text-xs font-bold font-mono tracking-widest"
-                   style={{ color: state.color === '#2B2D42' || state.color === '#3D5A80' ? '#fff' : '#111' }}>
+            {(state.style === 'Analog' || state.style === 'Orbit') && (() => {
+              const isDark = state.color === '#111111' || state.color === '#5B86E5';
+              return (
+              <div className="absolute right-12 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md px-2 py-1 rounded shadow-inner border border-black/5 text-sm font-bold font-mono tracking-widest z-10"
+                   style={{ color: isDark ? '#fff' : '#111' }}>
                 {time.getDate()}
               </div>
-            )}
+            )})()}
 
           </div>
         </div>

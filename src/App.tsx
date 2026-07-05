@@ -7,7 +7,7 @@ export default function App() {
   const [state, setState] = useState<AppState>({
     style: 'Analog',
     movement: 'Quartz',
-    color: '#F8F9FA', // white/off-white default
+    color: '#E8EAEE', // off-white default
     sound: 'Watch',
     volume: 80,
   });
